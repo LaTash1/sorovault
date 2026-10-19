@@ -16,6 +16,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -409,4 +410,14 @@ func intParam(raw string, fallback int) int {
 		return fallback
 	}
 	return v
+}
+
+// retryAfterSeconds renders a wait as the whole seconds a client should
+// wait before retrying, which is what the Retry-After header asks for.
+func retryAfterSeconds(d time.Duration) int {
+	seconds := int((d + time.Second - 1) / time.Second)
+	if seconds < 1 {
+		seconds = 1
+	}
+	return seconds
 }
